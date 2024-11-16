@@ -55,6 +55,14 @@ export const GET_RECENT_BLOCKS = gql`
   }
       transactions {
         txHash
+        events
+        status
+        stateTransitions
+        tx {
+          hash
+          nonce
+          sender
+        }
       }
     }
   
