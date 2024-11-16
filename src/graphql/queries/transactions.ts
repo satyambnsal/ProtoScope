@@ -18,6 +18,7 @@ export const GET_LATEST_TRANSACTIONS = gql`
           hash
           batchHeight
         }
+        stateTransitions
       }
     }
   }

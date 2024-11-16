@@ -12,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from 'react';
-import { formatDistance } from 'date-fns';
 import {
   Pagination,
   PaginationContent,
@@ -22,17 +21,15 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
-  CopyIcon,
-  CheckIcon,
   DashIcon,
   ClockIcon,
   CubeIcon,
   LayersIcon,
-  PersonIcon
 } from "@radix-ui/react-icons";
 
 import BlockDetailsModal from './BlockDetailsModal';
 import { CopyButton } from './CopyButton';
+import { Block } from '@/types';
 
 const PAGE_SIZE = 10;
 
@@ -74,18 +71,7 @@ export const GET_RECENT_BLOCKS = gql`
   }
 `;
 
-interface Block {
-  hash: string;
-  height: number;
-  createdAt: string;
-  producer: string;
-  stateRoot: string;
-  _count: {
-    transactions: number
-  };
-  transactions: { hash: string }[];
-  parentHash: string
-}
+
 
 interface GetRecentBlocksData {
   blocks: Block[];

@@ -1,9 +1,6 @@
 import {
   CopyIcon,
   CheckIcon,
-  DashIcon,
-  CodeIcon,
-  PersonIcon
 } from "@radix-ui/react-icons"
 import {
   Tooltip,

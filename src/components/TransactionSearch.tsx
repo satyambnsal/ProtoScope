@@ -3,7 +3,6 @@ import { useGraphQLQuery } from '../hooks/useGraphQLQuery';
 import { gql } from '@apollo/client';
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
@@ -13,8 +12,7 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,7 +20,6 @@ import {
   CrossCircledIcon,
   PersonIcon,
   DashIcon,
-  TimerIcon
 } from "@radix-ui/react-icons"
 import { cn } from "@/lib/utils"
 
@@ -77,7 +74,7 @@ interface SearchTransactionsVars {
 export function TransactionSearch() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [selectedTx, setSelectedTx] = useState<string | null>(null);
+  const [_, setSelectedTx] = useState<string | null>(null);
 
   const { data, loading, error } = useGraphQLQuery<
     SearchTransactionsData,
@@ -91,14 +88,14 @@ export function TransactionSearch() {
           { hash: { contains: query } },
           { sender: { contains: query } }
         ]
-      } : undefined,
+      } : {},
       take: 10
     },
     {
       enabled: query.length >= 3,
       staleTime: 10000,
     }
-  );
+  ) as any;
 
   function shortenHash(hash: string): string {
     return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
@@ -107,10 +104,6 @@ export function TransactionSearch() {
   function getStatusColor(status?: boolean) {
     if (status === undefined) return "bg-yellow-100 text-yellow-800";
     return status ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800";
-  }
-
-  function formatDate(date: string) {
-    return new Date(date).toLocaleString();
   }
 
   return (
@@ -149,7 +142,7 @@ export function TransactionSearch() {
             </CommandEmpty>
             {data?.transactions && (
               <CommandGroup heading="Transactions">
-                {data.transactions.map((tx) => (
+                {data.transactions.map((tx: any) => (
                   <CommandItem
                     key={tx.hash}
                     value={tx.hash}

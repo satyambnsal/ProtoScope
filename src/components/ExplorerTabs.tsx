@@ -6,7 +6,6 @@ import {
   ArrowRightIcon,
   ActivityLogIcon,
   MixerHorizontalIcon,
-  GearIcon,
 } from "@radix-ui/react-icons"
 import { TransactionSearch } from "./TransactionSearch"
 

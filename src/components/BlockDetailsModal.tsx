@@ -2,14 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  CopyIcon,
-  CheckIcon,
-  DashIcon,
-  ClockIcon,
   CubeIcon,
-  LayersIcon,
-  PersonIcon,
-  FileIcon,
   UpdateIcon,
   PlusIcon,
   MinusIcon
@@ -23,6 +16,7 @@ import {
 } from "@/components/ui/collapsible"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { CopyButton } from "./CopyButton"
+import { Block } from "@/types"
 
 const formatValue = (value: any) => {
   if (typeof value === 'object' && value !== null) {
@@ -43,7 +37,7 @@ const formatValue = (value: any) => {
   return value;
 };
 
-function JsonView({ data }: { data: any }) {
+export function JsonView({ data }: { data: any }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -63,7 +57,7 @@ function JsonView({ data }: { data: any }) {
   );
 }
 
-function JsonTree({ data }: { data: any }) {
+export function JsonTree({ data }: { data: any }) {
   return (
     <div className="space-y-1 font-mono text-sm">
       {Object.entries(data).map(([key, value], index) => (
@@ -86,31 +80,12 @@ function JsonTree({ data }: { data: any }) {
 interface BlockDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  block: {
-    hash: string;
-    height: number;
-    createdAt: string;
-    producer: string;
-    stateRoot: string;
-    transactions: {
-      tx: {
-        hash: string;
-        methodId: string;
-        sender: string;
-        isMessage: boolean;
-      };
-      stateTransitions: any;
-    }[];
-  };
+  block: Block;
 }
 
 export default function BlockDetailsModal({ isOpen, onClose, block }: BlockDetailsModalProps) {
   function shortenHash(hash: string): string {
     return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
-  }
-
-  function formatMethodId(methodId: string): string {
-    return methodId.replace(/^0x/, '').toUpperCase();
   }
 
   return (

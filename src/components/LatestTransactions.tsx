@@ -60,11 +60,10 @@ export function LatestTransactions() {
     return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
   }
 
-  // Calculate total pages
+  //TODO: Replace with actual value
   const totalTransactions = 10000;
   const totalPages = Math.ceil(totalTransactions / PAGE_SIZE);
 
-  // Generate page numbers to display
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;

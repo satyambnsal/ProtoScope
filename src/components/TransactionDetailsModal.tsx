@@ -12,6 +12,7 @@ import {
   CardStackIcon,
   CounterClockwiseClockIcon
 } from "@radix-ui/react-icons"
+import { JsonView } from './BlockDetailsModal'
 
 type TransactionDetailsModalProps = {
   isOpen: boolean,
@@ -29,7 +30,8 @@ export default function TransactionDetailsModal({ isOpen, onClose, transaction }
     timestamp: transaction?.timestamp ? new Date(transaction.timestamp).toLocaleString() : '',
     status: transaction?.status || 'Unknown',
     methodId: transaction?.methodId || '',
-    nonce: transaction?.nonce || '0'
+    nonce: transaction?.nonce || '0',
+    stateTransitions: transaction.executionResult?.stateTransitions || {}
   }
 
   return (
@@ -42,9 +44,9 @@ export default function TransactionDetailsModal({ isOpen, onClose, transaction }
           </DialogTitle>
         </DialogHeader>
 
-        <div className="mt-4 overflow-hidden">
+        <div className="max-h-[85vh] overflow-y-auto">
           <div className="overflow-x-auto">
-            <Table>
+            <Table className="">
               <TableBody>
                 <TableRow>
                   <TableCell className="font-medium flex items-center gap-2 whitespace-nowrap w-40">
@@ -60,14 +62,6 @@ export default function TransactionDetailsModal({ isOpen, onClose, transaction }
                     From
                   </TableCell>
                   <TableCell className="font-mono break-all max-w-[400px]">{txDetails.sender}</TableCell>
-                </TableRow>
-
-                <TableRow>
-                  <TableCell className="font-medium flex items-center gap-2 whitespace-nowrap w-40">
-                    <EnterIcon className="w-4 h-4 shrink-0" />
-                    To
-                  </TableCell>
-                  <TableCell className="font-mono break-all max-w-[400px]">{txDetails.recipient}</TableCell>
                 </TableRow>
 
                 <TableRow>
@@ -93,10 +87,10 @@ export default function TransactionDetailsModal({ isOpen, onClose, transaction }
                   </TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-sm ${txDetails.status.toLowerCase() === 'success'
-                        ? 'bg-green-100 text-green-800'
-                        : txDetails.status.toLowerCase() === 'pending'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
+                      ? 'bg-green-100 text-green-800'
+                      : txDetails.status.toLowerCase() === 'pending'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800'
                       }`}>
                       {txDetails.status}
                     </span>
@@ -117,6 +111,16 @@ export default function TransactionDetailsModal({ isOpen, onClose, transaction }
                     Nonce
                   </TableCell>
                   <TableCell>{txDetails.nonce}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>
+                    <TableCell className="font-medium flex items-center gap-2 whitespace-nowrap w-40">
+                      State Transitions
+                    </TableCell>
+                    <div className="py-2">
+                      <JsonView data={txDetails.stateTransitions} />
+                    </div>
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
