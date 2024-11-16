@@ -17,38 +17,86 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDistance } from 'date-fns';
 import { useState } from 'react';
 import { Transaction } from '@/types';
 import TransactionDetailsModal from './TransactionDetailsModal';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { CopyButton } from './CopyButton';
 
 const PAGE_SIZE = 10;
 
 export function LatestTransactions() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, isLoading, error } = useGraphQLQuery<
     GetLatestTransactionsData,
     GetLatestTransactionsVars
   >(
-    ['transactions', 'latest'],
+    ['transactions', 'latest', String(currentPage)],
     GET_LATEST_TRANSACTIONS,
-    { take: PAGE_SIZE },
     {
-      refetchInterval: 5000, // Refresh every 5 seconds
+      take: PAGE_SIZE,
+      skip: (currentPage - 1) * PAGE_SIZE
+    },
+    {
+      refetchInterval: 5000,
     }
   );
-  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   function formatMethodId(methodId: string): string {
-    // Convert the method ID to a readable format
-    // This might need adjustment based on your actual method ID format
     return methodId.replace(/^0x/, '').toUpperCase();
   }
 
   function shortenHash(hash: string): string {
     return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
   }
+
+  // Calculate total pages
+  const totalTransactions = 10000;
+  const totalPages = Math.ceil(totalTransactions / PAGE_SIZE);
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if total pages is less than max visible
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Show pages with ellipsis
+      if (currentPage <= 3) {
+        // Start of pagination
+        for (let i = 1; i <= 4; i++) pageNumbers.push(i);
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        // End of pagination
+        pageNumbers.push(1);
+        pageNumbers.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) pageNumbers.push(i);
+      } else {
+        // Middle of pagination
+        pageNumbers.push(1);
+        pageNumbers.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) pageNumbers.push(i);
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      }
+    }
+    return pageNumbers;
+  };
 
   return (
     <Card>
@@ -61,7 +109,7 @@ export function LatestTransactions() {
             <TableHeader>
               <TableRow>
                 <TableHead>Hash</TableHead>
-                <TableHead>Block</TableHead>
+                <TableHead>Block No</TableHead>
                 <TableHead>Method</TableHead>
                 <TableHead>Sender</TableHead>
                 <TableHead>Type</TableHead>
@@ -70,7 +118,6 @@ export function LatestTransactions() {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                // Loading state
                 [...Array(PAGE_SIZE)].map((_, i) => (
                   <TableRow key={i}>
                     <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
@@ -84,7 +131,7 @@ export function LatestTransactions() {
               ) : error ? (
                 <TableRow>
                   <TableCell
-                    colSpan={5}
+                    colSpan={6}
                     className="text-center text-muted-foreground h-32"
                   >
                     Error loading transactions
@@ -93,7 +140,7 @@ export function LatestTransactions() {
               ) : !data?.transactions.length ? (
                 <TableRow>
                   <TableCell
-                    colSpan={5}
+                    colSpan={6}
                     className="text-center text-muted-foreground h-32"
                   >
                     No transactions found
@@ -104,15 +151,18 @@ export function LatestTransactions() {
                   <TableRow key={tx.hash}>
                     <TableCell className="font-mono">
                       {shortenHash(tx.hash)}
+                      <CopyButton value={tx.hash} />
                     </TableCell>
                     <TableCell>
                       {tx.executionResult?.block.height ?? 'Pending'}
                     </TableCell>
                     <TableCell>
                       {formatMethodId(tx.methodId)}
+                      <CopyButton value={tx.methodId} />
                     </TableCell>
                     <TableCell className="font-mono">
                       {shortenHash(tx.sender)}
+                      <CopyButton value={tx.sender} />
                     </TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs ${tx.isMessage
@@ -135,13 +185,65 @@ export function LatestTransactions() {
               )}
             </TableBody>
           </Table>
-          {selectedTx && <TransactionDetailsModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            transaction={selectedTx}
-          />}
+
+          {/* Pagination */}
+          {!isLoading && !error && totalPages > 1 && (
+            <div className="border-t">
+              <Pagination className="py-4">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage > 1) setCurrentPage(currentPage - 1);
+                      }}
+                      className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+
+                  {getPageNumbers().map((pageNum, index) => (
+                    <PaginationItem key={index}>
+                      {pageNum === '...' ? (
+                        <span className="px-4 py-2">...</span>
+                      ) : (
+                        <PaginationLink
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentPage(Number(pageNum));
+                          }}
+                          isActive={currentPage === pageNum}
+                          className="cursor-pointer"
+                        >
+                          {pageNum}
+                        </PaginationLink>
+                      )}
+                    </PaginationItem>
+                  ))}
+
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                      }}
+                      className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </div>
+
+        {selectedTx && <TransactionDetailsModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          transaction={selectedTx}
+        />}
       </CardContent>
-    </Card >
+    </Card>
   );
 }
