@@ -26,6 +26,7 @@
     "@tanstack/react-query-devtools": "^5.13.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cmdk": "1.0.0",
     "date-fns": "^4.1.0",
     "graphql": "^16.8.1",
     "lucide-react": "^0.460.0",

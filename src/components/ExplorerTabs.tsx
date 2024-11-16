@@ -8,6 +8,7 @@ import {
   MixerHorizontalIcon,
   GearIcon,
 } from "@radix-ui/react-icons"
+import { TransactionSearch } from "./TransactionSearch"
 
 export function ExplorerTabs() {
   return (
@@ -44,6 +45,7 @@ export function ExplorerTabs() {
               <GearIcon className="mr-2 h-4 w-4" />
               Settings
             </button>
+            <TransactionSearch />
           </div>
         </div>
         <TabsContent value="transactions" className="space-y-4">
