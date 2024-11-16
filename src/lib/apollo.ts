@@ -1,7 +1,7 @@
 // src/lib/apollo.ts
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client'
 
-const SEQUENCER_URL = 'http://localhost:8080/graphql'
+const SEQUENCER_URL = 'http://localhost:8081/graphql'
 
 // We'll make the URI configurable later
 export const apolloClient = new ApolloClient({

@@ -1,23 +1,23 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { DocumentNode } from 'graphql'
 import { apolloClient } from '../lib/apollo'
 import { OperationVariables } from '@apollo/client'
 
-// Custom hook to use Apollo Client with React Query
-export function useGraphQLQuery<TData = any>(
+export function useGraphQLQuery<
+  TData = unknown,
+  TVariables extends OperationVariables = OperationVariables
+>(
   key: string[],
   query: DocumentNode,
-  options?: {
-    enabled?: boolean
-    staleTime?: number
-    cacheTime?: number
-  }
+  variables?: TVariables,
+  options?: Omit<UseQueryOptions<TData, Error>, 'queryKey' | 'queryFn'>
 ) {
-  return useQuery({
-    queryKey: key,
+  return useQuery<TData, Error>({
+    queryKey: variables ? [...key, variables] : key,
     queryFn: async () => {
       const { data } = await apolloClient.query<TData>({
         query,
+        variables,
       })
       return data
     },
