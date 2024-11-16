@@ -7,6 +7,7 @@ import { NodeStatus } from './components/NodeStatus';
 import { mockTransactions } from './mocks/data';
 import { TransactionsTable } from './components/TransactionsTable';
 import { LatestTransactions } from './components/LatestTransactions';
+import { ExplorerTabs } from './components/ExplorerTabs';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,9 +24,8 @@ function App() {
   return (
     <ApolloProvider client={apolloClient}>
       <QueryClientProvider client={queryClient}>
-        <div className="min-h-screen w-screen h-screen bg-red-300">
-          <NodeStatus />
-          <LatestTransactions />
+        <div className="min-h-screen w-screen h-screen">
+          <ExplorerTabs />
         </div>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
