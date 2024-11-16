@@ -54,9 +54,6 @@ export function LatestTransactions() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Latest Transactions</CardTitle>
-        <Button variant="outline" size="sm">
-          View All
-        </Button>
       </CardHeader>
       <CardContent>
         <div className="rounded-md border">
@@ -68,6 +65,7 @@ export function LatestTransactions() {
                 <TableHead>Method</TableHead>
                 <TableHead>Sender</TableHead>
                 <TableHead>Type</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -79,6 +77,7 @@ export function LatestTransactions() {
                     <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
                   </TableRow>
                 ))
@@ -102,10 +101,7 @@ export function LatestTransactions() {
                 </TableRow>
               ) : (
                 data.transactions.map((tx) => (
-                  <TableRow key={tx.hash} onClick={() => {
-                    setSelectedTx(tx);
-                    setIsModalOpen(true);
-                  }}>
+                  <TableRow key={tx.hash}>
                     <TableCell className="font-mono">
                       {shortenHash(tx.hash)}
                     </TableCell>
@@ -125,6 +121,14 @@ export function LatestTransactions() {
                         }`}>
                         {tx.isMessage ? 'Message' : 'Transaction'}
                       </span>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm" className="rounded-md" onClick={() => {
+                        setSelectedTx(tx);
+                        setIsModalOpen(true);
+                      }}>
+                        View Details
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
