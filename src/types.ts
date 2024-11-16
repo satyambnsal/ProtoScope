@@ -33,7 +33,17 @@ export interface Block {
   _count: {
     transactions: number
   }
-  transactions: { hash: string }[]
+  transactions: {
+    txHash: string
+    events: JSON
+    status: boolean
+    stateTransitions: JSON
+    tx: {
+      hash: string
+      nonce: number
+      sender: string
+    }
+  }[]
   parentHash: string
   stateTransitions: string
 }

@@ -4,10 +4,7 @@ import { Transaction } from "@/types"
 import {
   IdCardIcon,
   PersonIcon,
-  ClockIcon,
-  ArrowRightIcon,
   InfoCircledIcon,
-  EnterIcon,
   ExitIcon,
   CardStackIcon,
   CounterClockwiseClockIcon
@@ -25,10 +22,7 @@ export default function TransactionDetailsModal({ isOpen, onClose, transaction }
   const txDetails = {
     hash: transaction?.hash || '',
     sender: transaction?.sender || '',
-    recipient: transaction?.recipient || '',
-    amount: transaction?.amount || '0',
-    timestamp: transaction?.timestamp ? new Date(transaction.timestamp).toLocaleString() : '',
-    status: transaction?.status || 'Unknown',
+    status: transaction?.executionResult?.status === true ? 'Confirmed' : 'Unknown',
     methodId: transaction?.methodId || '',
     nonce: transaction?.nonce || '0',
     stateTransitions: transaction.executionResult?.stateTransitions || {}
@@ -62,22 +56,6 @@ export default function TransactionDetailsModal({ isOpen, onClose, transaction }
                     From
                   </TableCell>
                   <TableCell className="font-mono break-all max-w-[400px]">{txDetails.sender}</TableCell>
-                </TableRow>
-
-                <TableRow>
-                  <TableCell className="font-medium flex items-center gap-2 whitespace-nowrap w-40">
-                    <ArrowRightIcon className="w-4 h-4 shrink-0" />
-                    Amount
-                  </TableCell>
-                  <TableCell>{txDetails.amount} MINA</TableCell>
-                </TableRow>
-
-                <TableRow>
-                  <TableCell className="font-medium flex items-center gap-2 whitespace-nowrap w-40">
-                    <ClockIcon className="w-4 h-4 shrink-0" />
-                    Timestamp
-                  </TableCell>
-                  <TableCell>{txDetails.timestamp}</TableCell>
                 </TableRow>
 
                 <TableRow>
