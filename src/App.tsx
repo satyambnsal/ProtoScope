@@ -23,11 +23,8 @@ function App() {
   return (
     <ApolloProvider client={apolloClient}>
       <QueryClientProvider client={queryClient}>
-        <div className="min-h-screen bg-gray-50 w-screen h-screen bg-red-300">
-          {/* Your app content */}
-          <h1>Hello ProtoStar</h1>
+        <div className="min-h-screen w-screen h-screen bg-red-300">
           <NodeStatus />
-          {/* <TransactionsTable transactions={mockTransactions} isLoading={false} /> */}
           <LatestTransactions />
         </div>
         <ReactQueryDevtools initialIsOpen={false} />

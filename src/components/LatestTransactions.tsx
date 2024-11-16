@@ -18,6 +18,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistance } from 'date-fns';
+import { useState } from 'react';
+import { Transaction } from '@/types';
+import TransactionDetailsModal from './TransactionDetailsModal';
 
 const PAGE_SIZE = 10;
 
@@ -33,7 +36,9 @@ export function LatestTransactions() {
       refetchInterval: 5000, // Refresh every 5 seconds
     }
   );
-  
+  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   function formatMethodId(methodId: string): string {
     // Convert the method ID to a readable format
@@ -97,7 +102,10 @@ export function LatestTransactions() {
                 </TableRow>
               ) : (
                 data.transactions.map((tx) => (
-                  <TableRow key={tx.hash}>
+                  <TableRow key={tx.hash} onClick={() => {
+                    setSelectedTx(tx);
+                    setIsModalOpen(true);
+                  }}>
                     <TableCell className="font-mono">
                       {shortenHash(tx.hash)}
                     </TableCell>
@@ -123,8 +131,13 @@ export function LatestTransactions() {
               )}
             </TableBody>
           </Table>
+          {selectedTx && <TransactionDetailsModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            transaction={selectedTx}
+          />}
         </div>
       </CardContent>
-    </Card>
+    </Card >
   );
 }
