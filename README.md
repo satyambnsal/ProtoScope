@@ -1,50 +1,47 @@
-# React + TypeScript + Vite
+# Protoscope
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Minimal, customizable block explorer for Protokit app chain. Protoscope provides real-time insights into app-chain activity with a clean, intuitive interface.
 
-Currently, two official plugins are available:
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![NPM version](https://img.shields.io/npm/v/protoscope)](https://www.npmjs.com/package/protoscope)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- 🔍 Real-time block and transaction monitoring
+- 🎯 Advanced search functionality for transactions and blocks(Upcoming)
+- 📊 Detailed transaction insights with state transitions
+- 🎨 Clean, modern UI built with shadcn/ui
+- 📱 Fully responsive design
+- ⚡️ Fast and efficient data loading with GraphQL
+- ⚙️ Highly configurable
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Development
 
-- Configure the top-level `parserOptions` property like this:
+```bash
+# Install dependencies
+bun install
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+# Start development server
+bun dev
+
+# Build for production
+bun build
+
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## License
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+MIT License - see the [LICENSE](LICENSE) file for details
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Acknowledgments
+
+- Built with [Protokit](https://github.com/proto-kit/protokit)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Icons from [Radix Icons](https://icons.modulz.app/)
+
+## Support
+
+For support, questions, or feedback:
+- [GitHub Issues](https://github.com/satyambnsal/ProtoScope/issues)
+
+---

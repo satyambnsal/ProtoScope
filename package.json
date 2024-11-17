@@ -4,6 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "description": "Protokit Block Explorer for Developers",
+  "author": {
+    "name": "Satyam Bansal",
+    "url": "https://github.com/satyambnsal",
+    "email": "satyamsgsits1994@gmail.com"
+  },
+  
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
